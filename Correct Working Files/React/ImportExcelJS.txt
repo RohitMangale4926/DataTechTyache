@@ -1,0 +1,83 @@
+// ImportExcel.js
+import React, { useState } from 'react';
+import * as XLSX from 'xlsx';
+import './ImportExcel.css';
+import importExcelIcon from '../../assets/images/import.png'; 
+
+const ImportExcel = () => {
+    const [data, setData] = useState([]);
+    const [columns, setColumns] = useState([]);
+    const [errorLog, setErrorLog] = useState({});
+    const [isValid, setIsValid] = useState({});
+    const [editingRow, setEditingRow] = useState(-1);
+
+    const handleFileUpload = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            const binaryStr = e.target.result;
+            const workbook = XLSX.read(binaryStr, { type: 'binary' });
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheetName], { header: 1 });
+
+            // Get the header and rows, do not skip the first row
+            const [header, ...rows] = worksheet;
+
+            // Automatically set columns based on the header row
+            const cols = header.map((col, index) => ({ Header: col, accessor: index }));
+            setColumns(cols);
+
+            // Set data
+            const data = rows.map(row => {
+                let rowData = {};
+                header.forEach((col, index) => {
+                    rowData[index] = row[index];
+                });
+                return rowData;
+            });
+            setData(data);
+        };
+
+        reader.readAsBinaryString(file);
+    };
+
+    const handleButtonClick = () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.xlsx, .xls, .csv';
+        input.onchange = handleFileUpload;
+        input.click();
+    };
+
+    return (
+        <div className="import-excel">
+            <button className="import-button" onClick={handleButtonClick}>
+                <img src={importExcelIcon} alt="Import Excel" />
+                <span>Import Excel</span>
+            </button>
+            <div className="excel-table-container">
+                <table className="excel-table">
+                    <thead>
+                        <tr>
+                            {columns.map((col) => (
+                                <th key={col.accessor}>{col.Header}</th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                {columns.map((col) => (
+                                    <td key={col.accessor}>{row[col.accessor]}</td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
+
+export default ImportExcel;

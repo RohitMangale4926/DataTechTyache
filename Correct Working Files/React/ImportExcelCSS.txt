@@ -1,0 +1,49 @@
+/* ImportExcel.css */
+.import-excel {
+    padding: 20px;
+}
+
+.import-button {
+    display: flex;
+    align-items: center;
+    background-color: #d7d8da;
+    color: #0f0f0f;
+    border: 2px solid #c7c8c9; /* Add border */
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease; /* Add transition for smooth hover effect */
+    margin-bottom: 20px;
+}
+
+.import-button img {
+    height: 24px;
+    margin-right: 10px;
+}
+
+.import-button:hover {
+    background-color: #9d9d9e;
+}
+
+.excel-table-container {
+    max-height: 300px;
+    overflow: auto;
+}
+
+.excel-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.excel-table th,
+.excel-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.excel-table th {
+    background-color: #f2f2f2;
+}
